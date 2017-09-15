@@ -19,7 +19,7 @@ public class TheaterSeatingMain {
         Section section;
 
         try{
-            String fileName = "C://work/Theater_input.txt";
+            String fileName = "resources/Theater_input.txt";
             String theater_layout = "theater_layout";
             String ticket_requests = "ticket_requests";
             String nowReading = theater_layout;
@@ -62,7 +62,7 @@ public class TheaterSeatingMain {
         }catch (IOException e) {
             e.printStackTrace();
         }catch (Exception e) {
-        	System.out.println("Invalid File format");
+        	System.out.println("Invalid File ");
         }
         
         //Processing the request
