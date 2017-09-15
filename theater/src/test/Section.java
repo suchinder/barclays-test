@@ -5,8 +5,8 @@ package test;
  */
 public class Section {
     
-	int unoccupied_seats=0;
-    int sectionNumber=0;
+	private int unoccupied_seats=0;
+    private int sectionNumber=0;
     
 	public int getUnoccupied_seats() {
 		return unoccupied_seats;

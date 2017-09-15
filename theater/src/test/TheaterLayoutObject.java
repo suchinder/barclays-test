@@ -8,8 +8,8 @@ import java.util.ArrayList;
  */
 public class TheaterLayoutObject {
 
-    ArrayList<Row> rows = new ArrayList<>();
-    int totalUnoccupiedSeats=0;
+    private ArrayList<Row> rows = new ArrayList<>();
+    private int totalUnoccupiedSeats=0;
     
     public int getTotalUnoccupiedSeats() {
 		return totalUnoccupiedSeats;

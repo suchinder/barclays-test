@@ -17,7 +17,11 @@ public class TheaterSeatingMain {
         ArrayList<TicketRequestObject> ticketRequests = new ArrayList<TicketRequestObject>();
         Row row;
         Section section;
+        FileReader fileReader = null;
+        BufferedReader reader = null;
+        File input = null;
 
+        /*Parse the input file and populate the theater layout and ticket request objects*/
         try{
             String fileName = "resources/Theater_input.txt";
             String theater_layout = "theater_layout";
@@ -27,17 +31,18 @@ public class TheaterSeatingMain {
             int rowNumber=1;
             
 
-            File input = new File(fileName);
-            BufferedReader b = new BufferedReader(new FileReader(input));
+            input = new File(fileName);
+            fileReader = new FileReader(input);
+            reader = new BufferedReader(fileReader);
 
-            while ((nextLine = b.readLine()) != null) {
+            while ((nextLine = reader.readLine()) != null) {
 
                 if(nextLine.trim().isEmpty()) {
                     nowReading = ticket_requests;
                     continue;
                 }
 
-                //parse the input file to read the theater layout
+                //Parsing the theater layout.
                 if(nowReading.equalsIgnoreCase(theater_layout)){
                     String [] rowRecord = nextLine.split(" ");
                     row = new Row();
@@ -45,13 +50,15 @@ public class TheaterSeatingMain {
                     for( int i = 0; i <= rowRecord.length - 1; i++)
                     {
                         section = new Section();
-                        section.unoccupied_seats = Integer.parseInt(rowRecord[i]);
+                        section.setUnoccupied_seats(Integer.parseInt(rowRecord[i]));
                         section.setSectionNumber(i+1);
                         row.addSection(section);
-                        theaterLayoutObject.totalUnoccupiedSeats = section.unoccupied_seats + theaterLayoutObject.totalUnoccupiedSeats;
+                        theaterLayoutObject.setTotalUnoccupiedSeats(section.getUnoccupied_seats() + theaterLayoutObject.getTotalUnoccupiedSeats());
                     }
                     theaterLayoutObject.addRow(row);
-                }else {
+                }
+                //Parsing the ticket requests.
+                else {
                 	String [] rowRecord = nextLine.split(" ");
                 	TicketRequestObject ticketRequest = new TicketRequestObject();
                 	ticketRequest.setPartyName(rowRecord[0]);
@@ -62,20 +69,31 @@ public class TheaterSeatingMain {
         }catch (IOException e) {
             e.printStackTrace();
         }catch (Exception e) {
-        	System.out.println("Invalid File ");
+        	e.printStackTrace();
+        }finally
+        {
+            try{
+            	reader.close();
+            	}catch(Exception e){
+            		try{
+            			fileReader.close();
+            			}catch(Exception ee){
+            				e.printStackTrace();
+            			}
+            }
         }
         
-        //Processing the request
+        //Processing the requests and printing confirmed requests or explanations
         boolean ticketGranted = false;
         
         for (TicketRequestObject t : ticketRequests) {
 			
 			for (Row r : theaterLayoutObject.getRows()) {
 				for (Section s : r.getSections()) {
-					if(s.unoccupied_seats >= t.getTicketCount()) {
+					if(s.getUnoccupied_seats() >= t.getTicketCount()) {
 						System.out.println(t.getPartyName() + " Row " + r.getRowNumber() + " Section " + s.getSectionNumber());
-						s.unoccupied_seats = s.unoccupied_seats - t.getTicketCount();
-						theaterLayoutObject.totalUnoccupiedSeats = theaterLayoutObject.totalUnoccupiedSeats - t.getTicketCount();
+						s.setUnoccupied_seats(s.getUnoccupied_seats() - t.getTicketCount());
+						theaterLayoutObject.setTotalUnoccupiedSeats(theaterLayoutObject.getTotalUnoccupiedSeats() - t.getTicketCount());
 						ticketGranted = true;
 						break;
 					}
@@ -83,7 +101,7 @@ public class TheaterSeatingMain {
 				if(ticketGranted) break;
 			}
 			if(!ticketGranted) {
-				if(theaterLayoutObject.totalUnoccupiedSeats >= t.getTicketCount())
+				if(theaterLayoutObject.getTotalUnoccupiedSeats() >= t.getTicketCount())
 					System.out.println(t.getPartyName() + " Call to split party.");
 				else
 					System.out.println(t.getPartyName() + " Sorry, we can't handle your party.");
