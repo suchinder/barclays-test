@@ -126,35 +126,40 @@ public class TheaterSeatingUtil {
 	
 	public void processRequests(TheaterLayoutObject theaterLayoutObject, ArrayList<TicketRequestObject> ticketRequests) {
 		
-		boolean ticketGranted = false;
-        
+		 
 		if(ticketRequests.isEmpty()) {
 			throw new RuntimeException("Ticket requests are empty");
 		}
 		if(theaterLayoutObject == null) {
 			throw new RuntimeException("Theater Layout is empty");
 		}
-        for (TicketRequestObject t : ticketRequests) {
-			
-			for (Row r : theaterLayoutObject.getRows()) {
-				for (Section s : r.getSections()) {
-					if(s.getUnoccupied_seats() >= t.getTicketCount()) {
-						System.out.println(t.getPartyName() + " Row " + r.getRowNumber() + " Section " + s.getSectionNumber());
-						s.setUnoccupied_seats(s.getUnoccupied_seats() - t.getTicketCount());
-						theaterLayoutObject.setTotalUnoccupiedSeats(theaterLayoutObject.getTotalUnoccupiedSeats() - t.getTicketCount());
-						ticketGranted = true;
-						break;
-					}
-				}
-				if(ticketGranted) break;
-			}
-			if(!ticketGranted) {
-				if(theaterLayoutObject.getTotalUnoccupiedSeats() >= t.getTicketCount())
-					System.out.println(t.getPartyName() + " Call to split party.");
-				else
-					System.out.println(t.getPartyName() + " Sorry, we can't handle your party.");
-			}else
-				ticketGranted = false;
+        for (TicketRequestObject t : ticketRequests) {        	
+        	System.out.println(processAndGetResponse(theaterLayoutObject,t));        
 		}
+	}
+	
+	public String processAndGetResponse(TheaterLayoutObject theaterLayoutObject, TicketRequestObject t) {
+		
+		String result = null;
+		boolean ticketGranted = false;
+		
+		for (Row r : theaterLayoutObject.getRows()) {
+			for (Section s : r.getSections()) {
+				if(s.getUnoccupied_seats() >= t.getTicketCount()) {
+					result = t.getPartyName() + " Row " + r.getRowNumber() + " Section " + s.getSectionNumber();
+					s.setUnoccupied_seats(s.getUnoccupied_seats() - t.getTicketCount());
+					theaterLayoutObject.setTotalUnoccupiedSeats(theaterLayoutObject.getTotalUnoccupiedSeats() - t.getTicketCount());
+					ticketGranted = true;
+					return result;
+				}
+			}
+		}
+		if(!ticketGranted) {
+			if(theaterLayoutObject.getTotalUnoccupiedSeats() >= t.getTicketCount())
+				result = t.getPartyName() + " Call to split party.";
+			else
+				result = t.getPartyName() + " Sorry, we can't handle your party.";
+		}
+		return result;
 	}
 }

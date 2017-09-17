@@ -115,5 +115,50 @@ public class TheaterSeatingTest {
     	theaterSeating.processRequests(theaterLayoutObject, ticketRequests);
 
     }
+	
+	@Test
+	public void testprocessAndGetResponseExplanation1() {
+		
+		ArrayList<String> testLayout = new ArrayList<String>();
+		testLayout.add("2 6 7 8");
+		theaterLayoutObject = theaterSeating.populateLayOut(testLayout);
+		TicketRequestObject request = new TicketRequestObject("Greg",2);		
+		String response = theaterSeating.processAndGetResponse(theaterLayoutObject, request);
+		
+		assertEquals("Greg Row 1 Section 1",response);
+	}
+	
+	@Test
+	public void testprocessAndGetResponseExplanation2() {
+		
+		ArrayList<String> testLayout = new ArrayList<String>();
+		testLayout.add("2 6 7 8");
+		theaterLayoutObject = theaterSeating.populateLayOut(testLayout);
+		TicketRequestObject request1 = new TicketRequestObject("Greg",2);
+		String response1 = theaterSeating.processAndGetResponse(theaterLayoutObject, request1);
+		TicketRequestObject request2 = new TicketRequestObject("Doug",9);
+		String response2 = theaterSeating.processAndGetResponse(theaterLayoutObject, request2);
+		
+		assertEquals("Greg Row 1 Section 1",response1);
+		assertEquals("Doug Call to split party.",response2);
+	}
+	
+	@Test
+	public void testprocessAndGetResponseExplanation3() {
+		
+		ArrayList<String> testLayout = new ArrayList<String>();
+		testLayout.add("2 6 7 8");
+		theaterLayoutObject = theaterSeating.populateLayOut(testLayout);
+		TicketRequestObject request1 = new TicketRequestObject("Greg",2);
+		String response1 = theaterSeating.processAndGetResponse(theaterLayoutObject, request1);
+		TicketRequestObject request2 = new TicketRequestObject("Doug",9);
+		String response2 = theaterSeating.processAndGetResponse(theaterLayoutObject, request2);
+		TicketRequestObject request3 = new TicketRequestObject("Mike",30);
+		String response3 = theaterSeating.processAndGetResponse(theaterLayoutObject, request3);
+		
+		assertEquals("Greg Row 1 Section 1",response1);
+		assertEquals("Doug Call to split party.",response2);
+		assertEquals("Mike Sorry, we can't handle your party.",response3);
+	}
 
 }

@@ -2,6 +2,16 @@ package main.dev;
 
 public class TicketRequestObject {
 	
+	public TicketRequestObject(String partyName, int ticketCount) {
+		super();
+		this.partyName = partyName;
+		this.ticketCount = ticketCount;
+	}
+	
+	public TicketRequestObject() {
+		// TODO Auto-generated constructor stub
+	}
+
 	private String partyName;
 	private int ticketCount=0;
 	
