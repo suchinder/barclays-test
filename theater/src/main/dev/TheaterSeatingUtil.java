@@ -8,8 +8,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * @author kssuc
+ *
+ */
 public class TheaterSeatingUtil {
 
+	/**
+	 * This method reads the input file and splits the data in the file into two ArrayLists - one for theater layout 
+	 * and the other for ticket requests
+	 * @param fileName
+	 * @return HashMap<String, ArrayList<String>>
+	 */
 	public HashMap<String, ArrayList<String>> readFileAndSpitData(String fileName) {
 
 		File input = null;
@@ -63,6 +73,11 @@ public class TheaterSeatingUtil {
 
 	}
 	
+	/**
+	 * This method parses in the ArrayList and populates the data into TheaterLayOutObject
+	 * @param layOut
+	 * @return TheaterLayoutObject
+	 */
 	public TheaterLayoutObject populateLayOut(ArrayList<String> layOut) {
 		
 		TheaterLayoutObject result = null;
@@ -98,6 +113,11 @@ public class TheaterSeatingUtil {
 		return result;
 	}
 	
+	/**
+	 * This method parses in the ArrayList and populates the data into TheaterRequestObject
+	 * @param ticketRequests
+	 * @return ArrayList<TicketRequestObject>
+	 */
 	public ArrayList<TicketRequestObject> populateRequests(ArrayList<String> ticketRequests) {
 		
 		ArrayList<TicketRequestObject> result = null;
@@ -124,6 +144,11 @@ public class TheaterSeatingUtil {
 		return result;
 	}
 	
+	/**
+	 * This method accepts the theater layout and ticket requests as inputs and processes the requests
+	 * @param theaterLayoutObject
+	 * @param ticketRequests
+	 */
 	public void processRequests(TheaterLayoutObject theaterLayoutObject, ArrayList<TicketRequestObject> ticketRequests) {
 		
 		 
@@ -138,27 +163,33 @@ public class TheaterSeatingUtil {
 		}
 	}
 	
-	public String processAndGetResponse(TheaterLayoutObject theaterLayoutObject, TicketRequestObject t) {
+	/**
+	 * This method processes individual ticket request and returns the order response
+	 * @param theaterLayoutObject
+	 * @param ticketRequest
+	 * @return String
+	 */
+	public String processAndGetResponse(TheaterLayoutObject theaterLayoutObject, TicketRequestObject ticketRequest) {
 		
 		String result = null;
 		boolean ticketGranted = false;
 		
 		for (Row r : theaterLayoutObject.getRows()) {
 			for (Section s : r.getSections()) {
-				if(s.getUnoccupied_seats() >= t.getTicketCount()) {
-					result = t.getPartyName() + " Row " + r.getRowNumber() + " Section " + s.getSectionNumber();
-					s.setUnoccupied_seats(s.getUnoccupied_seats() - t.getTicketCount());
-					theaterLayoutObject.setTotalUnoccupiedSeats(theaterLayoutObject.getTotalUnoccupiedSeats() - t.getTicketCount());
+				if(s.getUnoccupied_seats() >= ticketRequest.getTicketCount()) {
+					result = ticketRequest.getPartyName() + " Row " + r.getRowNumber() + " Section " + s.getSectionNumber();
+					s.setUnoccupied_seats(s.getUnoccupied_seats() - ticketRequest.getTicketCount());
+					theaterLayoutObject.setTotalUnoccupiedSeats(theaterLayoutObject.getTotalUnoccupiedSeats() - ticketRequest.getTicketCount());
 					ticketGranted = true;
 					return result;
 				}
 			}
 		}
 		if(!ticketGranted) {
-			if(theaterLayoutObject.getTotalUnoccupiedSeats() >= t.getTicketCount())
-				result = t.getPartyName() + " Call to split party.";
+			if(theaterLayoutObject.getTotalUnoccupiedSeats() >= ticketRequest.getTicketCount())
+				result = ticketRequest.getPartyName() + " Call to split party.";
 			else
-				result = t.getPartyName() + " Sorry, we can't handle your party.";
+				result = ticketRequest.getPartyName() + " Sorry, we can't handle your party.";
 		}
 		return result;
 	}
