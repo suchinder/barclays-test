@@ -24,10 +24,14 @@ public class TheaterSeatingMain {
     	
         TheaterSeatingUtil theaterSeatingProcessor = new TheaterSeatingUtil();
     	
+        // 1. Read the file and copy the data into ArrayLists 
     	inputData = theaterSeatingProcessor.readFileAndSpitData(fileName);
+    	
+    	// 2. Parse the ArrayList and populate the TheaterLayOutObject and TicketRequestObject
     	theaterLayoutObject = theaterSeatingProcessor.populateLayOut(inputData.get(theater_layout));
     	ticketRequests = theaterSeatingProcessor.populateRequests(inputData.get(ticket_requests));
     	
+    	// 3. Process ticket requests and generate response
     	theaterSeatingProcessor.processRequests(theaterLayoutObject, ticketRequests);    	
     	
     }
