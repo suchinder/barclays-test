@@ -1,4 +1,4 @@
-package test;
+package main.dev;
 
 /**
  * Created by kssuc on 9/14/2017.
